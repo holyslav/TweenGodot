@@ -1,27 +1,32 @@
 extends Control
 
-var transition_type = 0
+enum TransitionType {TRANS_SINE, TRANS_QUINT, TRANS_QUART, TRANS_QUAD,
+TRANS_EXPO, TRANS_ELASTIC, TRANS_CUBIC, TRANS_CIRC, TRANS_BOUNCE, TRANS_BACK }
+enum EaseType {EASE_IN, EASE_OUT, EASE_IN_OUT, EASE_OUT_IN}
 
-const names = ["TRANS_LINEAR", "TRANS_SINE", "TRANS_QUINT", "TRANS_QUART", "TRANS_QUAD", 
-				"TRANS_EXPO", "TRANS_ELASTIC", "TRANS_CUBIC", "TRANS_CIRC", "TRANS_BOUNCE", "TRANS_BACK"]
+export (TransitionType) var trans_type = TransitionType.TRANS_SINE
+export (EaseType) var ease_type = EaseType.EASE_IN_OUT
+export (float, 0.1, 10) var speed = 1
 
-func _ready():
-	add_to_group("TweenItems")
+onready var cursor = $Content/Cursor
+onready var tw = $Content/Tween
 
-func stop():
-	rect_position.x = 0
-
-func set_transition_type(new_value:int):
-	transition_type = new_value
-	$Label.text = names[new_value]
-	
-func selected(value=false):
-	if value:
-		add_stylebox_override("panel", load("res://TweenItem_selected.tres"))
-	else:
-		add_stylebox_override("panel", load("res://TweenItem.tres"))
+var need_reverse = false
 
 func run():
-	$Tween.reset_all()
-	$Tween.interpolate_property(self, "rect_position:x", 0, 900, 1, transition_type, Tween.EASE_IN_OUT)
-	$Tween.start()
+	tw.interpolate_property(cursor, "rect_position:y", 135, 0, speed, trans_type, ease_type)
+	tw.interpolate_property(cursor, "rect_position:x", 0, 135, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
+	tw.start()
+	need_reverse = true
+
+func _on_Tween_tween_all_completed():
+	if need_reverse:
+		need_reverse = false
+		tw.interpolate_property(cursor, "rect_position:y", 0, 135, speed, trans_type, ease_type)
+		tw.interpolate_property(cursor, "rect_position:x", 135, 0, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
+		tw.start()
+
+
+func _on_TweenItem_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		run()

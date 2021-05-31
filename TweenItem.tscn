@@ -1,24 +1,51 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://TweenItem.tres" type="StyleBox" id=1]
 [ext_resource path="res://TweenItem.gd" type="Script" id=2]
 
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+
 [node name="TweenItem" type="PanelContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 40 )
-custom_styles/panel = ExtResource( 1 )
+margin_right = 150.0
+margin_bottom = 150.0
+custom_styles/panel = SubResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
+[node name="Content" type="Control" parent="."]
+margin_left = 5.0
 margin_top = 5.0
-margin_right = 100.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 100, 30 )
-align = 1
-valign = 1
+margin_right = 155.0
+margin_bottom = 155.0
+rect_min_size = Vector2( 150, 150 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Tween" type="Tween" parent="."]
+[node name="Cursor" type="ColorRect" parent="Content"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -15.0
+margin_right = 15.0
+rect_min_size = Vector2( 15, 15 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Content"]
+
+[connection signal="gui_input" from="." to="." method="_on_TweenItem_gui_input"]
+[connection signal="tween_all_completed" from="Content/Tween" to="." method="_on_Tween_tween_all_completed"]
