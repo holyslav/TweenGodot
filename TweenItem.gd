@@ -14,19 +14,19 @@ onready var tw = $Content/Tween
 var need_reverse = false
 
 func run():
-	tw.interpolate_property(cursor, "rect_position:y", 135, 0, speed, trans_type, ease_type)
-	tw.interpolate_property(cursor, "rect_position:x", 0, 135, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
+	tw.interpolate_property(cursor, "rect_position:y", 137, 0, speed, trans_type, ease_type)
+	tw.interpolate_property(cursor, "rect_position:x", 0, 137, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
 	tw.start()
 	need_reverse = true
 
 func _on_Tween_tween_all_completed():
 	if need_reverse:
 		need_reverse = false
-		tw.interpolate_property(cursor, "rect_position:y", 0, 135, speed, trans_type, ease_type)
-		tw.interpolate_property(cursor, "rect_position:x", 135, 0, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
+		tw.interpolate_property(cursor, "rect_position:y", 0, 137, speed, trans_type, ease_type)
+		tw.interpolate_property(cursor, "rect_position:x", 137, 0, speed, Tween.TRANS_LINEAR, EaseType.EASE_IN_OUT)
 		tw.start()
 
 
-func _on_TweenItem_gui_input(event):
-	if event is InputEventMouseButton and event.pressed:
+func gui_input(event):
+	if event is InputEventMouseButton and event.pressed and Rect2(rect_position, rect_size).has_point(event.position):
 		run()
