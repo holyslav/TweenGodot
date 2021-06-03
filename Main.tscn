@@ -1,11 +1,59 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://TweenScene.tscn" type="PackedScene" id=2]
+
+[sub_resource type="ViewportTexture" id=4]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+void fragment () {
+	vec4 tex = texture(TEXTURE, UV);
+	COLOR.rgb = tex.rgb * 0.95;
+	COLOR.a = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Viewport")
 
 [node name="Main" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Screen" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1024, 600 )
+transparent_bg = true
+render_target_clear_mode = 2
+render_target_update_mode = 3
+
+[node name="prev_frame" type="TextureRect" parent="Viewport"]
+material = SubResource( 2 )
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource( 3 )
+expand = true
+
+[node name="TweenScene" parent="Viewport" instance=ExtResource( 2 )]

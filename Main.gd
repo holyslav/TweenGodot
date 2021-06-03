@@ -1,4 +1,5 @@
 extends Control
 
 func _ready():
-	get_tree().change_scene("res://TweenScene.tscn")
+	$Viewport.size = get_viewport_rect().size
+	$Viewport/prev_frame.rect_size = get_viewport_rect().size
