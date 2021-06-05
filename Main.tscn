@@ -6,27 +6,14 @@
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
-uniform float blur_damping : hint_range(0, 2);
-uniform float front_priority : hint_range(0, 2);
-
-void fragment ()
-{
-	vec3 sum;
-	float central_priority = 1.0 + front_priority;
-	sum += texture(TEXTURE, UV).rgb * central_priority;
-	sum += texture(TEXTURE, UV + SCREEN_PIXEL_SIZE * vec2(1,0)).rgb;
-	sum += texture(TEXTURE, UV + SCREEN_PIXEL_SIZE * vec2(-1,0)).rgb;
-	sum += texture(TEXTURE, UV + SCREEN_PIXEL_SIZE * vec2(0,1)).rgb;
-	sum += texture(TEXTURE, UV + SCREEN_PIXEL_SIZE * vec2(0,-1)).rgb;
-
-	COLOR.rgb = (sum / (4.0 + central_priority * 1.1 + blur_damping));
+void fragment () {
+	vec4 tex = texture(TEXTURE, UV);
+	COLOR.rgb = tex.rgb * 0.9;
 	COLOR.a = 1.0;
 }"
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = SubResource( 1 )
-shader_param/blur_damping = 0.1
-shader_param/front_priority = 1.0
 
 [node name="Main" type="Control"]
 anchor_right = 1.0
